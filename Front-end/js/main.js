@@ -1,4 +1,4 @@
-//DOM ELEMENTS
+/*-----DOM ELEMENTS-----*/
 //basic player info
 const playerFormElement = document.getElementById('player-form');
 const playerNameElement = document.getElementById('player-name');
@@ -46,8 +46,7 @@ const playerStatsDisplayElement = document.getElementById('player-stats-display'
 
 
 
-//EVENT LISTENERS
-
+/*-----UTILITY FUNCTIONS-----*/
 //add feedback to form
 function addFeedback(message, type) {
     feedbackElement.textContent = message;
@@ -55,24 +54,12 @@ function addFeedback(message, type) {
 }
 
 //batting average calculation
-hitsElement.addEventListener('input', calcBattingAverage);
-atBatsElement.addEventListener('input', calcBattingAverage);
-
 function calcBattingAverage(){
     const hits = parseInt(hitsElement.value);
     const atBats = parseInt(atBatsElement.value);
     const battingAverage = (atBats !== 0) ? (hits / atBats).toFixed(3) : 0;
     battingAverageElement.value = battingAverage;
 }
-
-//show pitching stats if pitcher is selected
-playerPositionElement.addEventListener('change', function() {
-    if (playerPositionElement.value === 'SP' || playerPositionElement.value === 'RP') {
-        pitchingStatsSectionElement.style.display = 'block';
-    } else {
-        pitchingStatsSectionElement.style.display = 'none';
-    }
-});
 
 //function to display statistics
 function displayStats(data) {
@@ -93,6 +80,33 @@ function displayStats(data) {
         }
     }
 }
+
+//function to collect player data
+function gatherFormData(onlyFilledFields = false){
+    const playerData = {};
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        if(!onlyFilledFields || (onlyFilledFields && input.value.trim !== '')){
+            playerData[input.id] = input.value;
+        }
+    });
+    return playerData;
+}
+
+/*-----EVENT LISTENERS-----*/
+//show hitting stats if batter is selected
+hitsElement.addEventListener('input', calcBattingAverage);
+atBatsElement.addEventListener('input', calcBattingAverage);
+
+//show pitching stats if pitcher is selected
+playerPositionElement.addEventListener('change', function() {
+    if (playerPositionElement.value === 'SP' || playerPositionElement.value === 'RP') {
+        pitchingStatsSectionElement.style.display = 'block';
+    } else {
+        pitchingStatsSectionElement.style.display = 'none';
+    }
+});
+
 
 //submit player form
 playerFormElement.addEventListener('submit', function(e) {
@@ -116,7 +130,6 @@ playerFormElement.addEventListener('submit', function(e) {
     //PROCESS DATA
 });
 
-//LOCAL STORAGE
 //load player data from local storage on page load
 document.addEventListener('DOMContentLoaded', function() {
     const players = JSON.parse(localStorage.getItem('players'));
@@ -130,3 +143,55 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+/*-----API CALLS-----*/
+const playerData = gatherFormData();
+
+//create(POST)
+fetch('http://localhost:3000/api/players', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(playerData)
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error: ', error));
+
+//read(GET)
+fetch('http://localhost:3000/api/players')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        //display data
+    })
+    .catch(error => console.error('Error: ', error));
+
+//update(PUT)
+const updatedPlayerData = gatherFormData(true);
+
+//placeholder for player id
+const playerIdUpdate = 'some-id';
+
+fetch(`http://localhost:3000/api/players/${playerIdUpdate}`, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(updatedPlayerData)
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error: ', error));
+
+//delete(DELETE)
+//placeholder for player id
+const playerIdDelete = 'some-id';
+
+fetch(`http://localhost:3000/api/players/${playerIdDelete}`, {
+    method: 'DELETE'
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error: ', error));
