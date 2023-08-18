@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel = "stylesheet" href = "Front-end/css/styles.css">
+</head>
+<body>
+    <script src = "Front-end/js/main.js" defer></script>
+    <header>Baseball Stats Tracker</header>
+    <main>
+        <div class = "app-container">
+        <!--Player Input Section-->
+        <section class = "form-section" id = "player-input">
+            <form id = "player-form">
+                <div class = "form-section">
+                    <!--Basic Player Info-->
+                    <h2>Basic Information</h2>
+                    <input type = "text" id = "player-name" placeholder = "Player Name" required>
+                    <select id = "player-position" required>
+                        <option value = "">Select Position</option>
+                        <option value = "C">Catcher</option>
+                        <option value = "1B">First Base</option>
+                        <option value = "2B">Second Base</option>
+                        <option value = "3B">Third Base</option>
+                        <option value = "SS">Shortstop</option>
+                        <option value = "LF">Left Field</option>
+                        <option value = "CF">Center Field</option>
+                        <option value = "RF">Right Field</option>
+                        <option value = "DH">Designated Hitter</option>
+                        <option value = "SP">Starting Pitcher</option>
+                        <option value = "RP">Relief Pitcher</option>
+                    </select>
+                    <input type = "text" id = "team-name" placeholder = "Team Name">
+                    <input type = "number" id = "player-number" placeholder = "Jersey Number" min = "0">
+                </div>
+
+                <div class = "section" id = "batting-stats">
+                    <!--Batting Stats-->
+                    <h2>Batting</h2>
+                    <input type = "number" id = "at-bats" placeholder = "At Bats (AB)" min = "0">
+                    <input type = "number" id = "hits" placeholder = "Hits (H)" min = "0">
+                    <input type = "number" id = "doubles" placeholder = "Doubles (2B)" min = "0">
+                    <input type = "number" id = "triples" placeholder = "Triples (3B)" min = "0">
+                    <input type = "number" id = "hr" placeholder = "Home Runs (HR)" min = "0">
+                    <input type = "number" id = "runs" placeholder = "Runs (R)" min = "0">
+                    <input type = "number" id = "rbi" placeholder = "Runs Batted In (RBI)" min = "0">
+                    <input type = "number" id = "walks" placeholder = "Walks (BB)" min = "0">
+                    <input type = "number" id = "strikeouts-batter" placeholder = "Strikeouts (SO)" min = "0">
+                    <input type = "number" id = "hbp" placeholder = "Hit By Pitch (HBP)" min = "0">
+                    <input type = "number" id = "batting-average" step = ".001" readonly placeholder="Batting average (BA)">
+                </div>
+
+                <div class = "section" id = "pitching-stats">
+                    <!--Pitching Stats-->
+                    <h2>Pitching</h2>
+                    <input type = "number" id = "wins" placeholder = "Wins (W)" min = "0">
+                    <input type = "number" id = "losses" placeholder = "Losses (L)" min = "0">
+                    <input type = "number" id = "saves" placeholder = "Saves (SV)" min = "0">
+                    <input type = "number" id = "hits-allowed" placeholder = "Hits Allowed (H)" min = "0">
+                    <input type = "number" id = "runs-allowed" placeholder = "Runs Allowed (R)" min = "0">
+                    <input type = "number" id = "earned-runs" placeholder = "Earned Runs (ER)" min = "0">
+                    <input type = "number" id = "walks-allowed" placeholder = "Walks Allowed (BB)" min = "0">
+                    <input type = "number" id = "strikeouts" placeholder = "Strikeouts (SO)" min = "0">
+                    <input type = "number" id = "hit-batters" placeholder = "Hit Batters (HBP)" min = "0">
+                    <input type = "number" id = "innings" placeholder = "Innings Pitched (IP)" min = "0">
+                </div>
+
+                <div class = "section" id = "fielding-stats">
+                    <!--Fielding Stats-->
+                    <h2>Fielding</h2>
+                    <input type = "number" id = "putouts" placeholder = "Putouts (PO)" min = "0">
+                    <input type = "number" id = "assists" placeholder = "Assists (A)" min = "0">
+                    <input type = "number" id = "errors" placeholder = "Errors (E)" min = "0">
+                </div>
+
+                <div class = "section" id = "baserunning-stats">
+                    <!--Baserunning-->
+                    <h2>Baserunning</h2>
+                    <input type = "number" id = "sb" placeholder = "Stolen Bases (SB)" min = "0">
+                    <input type = "number" id = "cs" placeholder = "Caught Stealing (CS)" min = "0">
+                </div>
+
+                <button type = "submit" id = "submit">Add Player</button>
+            </form>
+            <div id = "feedback"></div>
+        </section>
+        <!--Stats Section-->
+        <section class = "stats-section" id = "player-stats">
+            <div id = "player-stats-display">
+            <h2>Player Statistics</h2>
+            </div>
+        </section>
+        </div>
+    </main>
+    <footer>
+        <p>2023 Baseball Stats Tracker</p>
+    </footer>
+</body>
+</html>
