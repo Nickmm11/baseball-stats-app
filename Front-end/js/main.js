@@ -93,10 +93,135 @@ function gatherFormData(onlyFilledFields = false){
     return playerData;
 }
 
+//function to display leaderboard
+function displayLeaderboard(players) {
+    playerStatsDisplayElement.innerHTML = '';
+
+    players.forEach(player => {
+        const playerEntry = document.createElement('div');
+        playerEntry.className = 'player-entry';
+
+        //display
+        let playerInfo = `<strong>${player['player-name']}</strong> - ${player['team-name']} - ${player['player-position']}<br>`;
+        for(let key in player) {
+            if(player[key] && key !== 'player-name' && key !== 'team-name' && key !== 'player-position' && key !== 'id'){
+                playerInfo += `${key.replace('-', ' ').toUpperCase()}: ${player[key]}<br>`;
+            }
+        }
+
+        //edit and delete buttons
+        const editButton = `<button class="edit-button" data-id="${player.id}">Edit</button>`;
+        const deleteButton = `<button class="delete-button" data-id="${player.id}">Delete</button>`;
+
+        playerEntry.innerHTML = playerInfo + editButton + deleteButton;
+        playerStatsDisplayElement.appendChild(playerEntry);
+    });
+}
+
+//edit and delete functions
+function editFunction(e) {
+    const playerId = e.target.getAttribute('data-id');
+    //fetch player data, then populate form
+    fetch(`http://localhost:3000/api/players/${playerId}`)
+    .then(response => response.json())
+    .then(player => {
+        for(let key in player) {
+            const input = document.getElementById(key);
+            if(input) {
+                input.value = player[key];
+            }
+        }
+
+        playerFormElement.addEventListener('submit', function onFormSubmit(e) {
+            e.preventDefault();
+            //update player
+            updatePlayer(playerId);
+            //remove event listener to prevent multiple submissions
+            playerFormElement.removeEventListener('submit', onFormSubmit);
+        });
+    })
+    .catch(error => console.error('Error fetching player for edit: ', error));
+}
+
+/*-----CRUD OPERATIONS-----*/
+//CREATE - POST
+function createPlayer() {
+    const playerData = gatherFormData();
+
+    //fetch player data
+    fetch('http://localhost:3000/api/players', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(playerData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        addFeedback('Player added successfully!', 'success');
+        fetchPlayerData();
+    })
+    .catch(error => console.error('Error creating player: ', error));
+}
+
+//READ - GET
+function fetchPlayerData() {
+    fetch('http://localhost:3000/api/players')
+    .then(response => response.json())
+    .then(players => displayLeaderboard(players))
+    .catch(error => console.error('Error: ', error));
+}
+
+//UPDATE - PUT
+function updatePlayer(playerId) {
+    const updatedPlayerData = gatherFormData(true);
+
+    //fetch player data
+    fetch(`http://localhost:3000/api/players/${playerId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedPlayerData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        addFeedback('Player updated successfully!', 'success');
+        fetchPlayerData();
+    })
+    .catch(error => console.error('Error updating player: ', error));
+}
+
+//DELETE - DELETE
+function deletePlayer(e) {
+    const playerId = e.target.getAttribute('data-id');
+    //delete player, then fetch and display updated leaderboard
+    fetch(`http://localhost:3000/api/players/${playerId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if(response.ok) {
+            fetchPlayerData();
+        } else {
+            console.error('Error deleting player: ', response);
+        }
+    })
+    .catch(error => console.error('Error deleting player: ', error));
+}
+
 /*-----EVENT LISTENERS-----*/
 //show hitting stats if batter is selected
 hitsElement.addEventListener('input', calcBattingAverage);
 atBatsElement.addEventListener('input', calcBattingAverage);
+
+//event listener for edit and delete buttons
+document.addEventListener('click', function(e) {
+    if(e.target && e.target.classList.contains('edit-button')) {
+        editFunction(e);
+    } else if(e.target && e.target.classList.contains('delete-button')) {
+        deletePlayer(e);
+    }
+});
 
 //show pitching stats if pitcher is selected
 playerPositionElement.addEventListener('change', function() {
@@ -111,87 +236,22 @@ playerPositionElement.addEventListener('change', function() {
 //submit player form
 playerFormElement.addEventListener('submit', function(e) {
     e.preventDefault();
-    //get player data
-    const playerData = {};
-    const inputs = document.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-        playerData[input.id] = input.value;
-    });
-    //save player data to local storage
-    const players = JSON.parse(localStorage.getItem('players')) || [];
-    players.push(playerData);
-    localStorage.setItem('players', JSON.stringify(players));
+    //create player
+    createPlayer();
     //clear form
     playerFormElement.reset();
-    //display feedback
-    addFeedback('Player added successfully!', 'success');
-    //display stats
-    displayStats(playerData);
-    //PROCESS DATA
 });
 
-//load player data from local storage on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const players = JSON.parse(localStorage.getItem('players'));
-    if(players && players.length > 0) { 
-        const latestPlayer = players[players.length - 1];
-        Object.keys(latestPlayer).forEach(key => {
-            const input = document.getElementById(key);
-            if(input) {
-                input.value = latestPlayer[key];
-            }
-        });
-    }
-});
+//load player data on page load
+document.addEventListener('DOMContentLoaded', fetchPlayerData);
 
-/*-----API CALLS-----*/
-const playerData = gatherFormData();
+/*-----LOCAL STORAGE-----*/
+//save player data to local storage
+function saveToLocalStorage(players) {
+    localStorage.setItem('players', JSON.stringify(players));
+}
 
-//create(POST)
-fetch('http://localhost:3000/api/players', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(playerData)
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error('Error: ', error));
-
-//read(GET)
-fetch('http://localhost:3000/api/players')
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        //display data
-    })
-    .catch(error => console.error('Error: ', error));
-
-//update(PUT)
-const updatedPlayerData = gatherFormData(true);
-
-//placeholder for player id
-const playerIdUpdate = 'some-id';
-
-fetch(`http://localhost:3000/api/players/${playerIdUpdate}`, {
-    method: 'PUT',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(updatedPlayerData)
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error('Error: ', error));
-
-//delete(DELETE)
-//placeholder for player id
-const playerIdDelete = 'some-id';
-
-fetch(`http://localhost:3000/api/players/${playerIdDelete}`, {
-    method: 'DELETE'
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error('Error: ', error));
+//load player data from local storage
+function loadFromLocalStorage() {
+    return JSON.parse(localStorage.getItem('players')) || [];
+}
