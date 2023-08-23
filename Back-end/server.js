@@ -13,6 +13,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Import routes
+const playerRoutes = require('./routes/players');
+app.use('/api/players', playerRoutes);
+
 //connect to database
 const pool = new Pool({
     connectionString: 'postgres://ungclbar:Yp6AMSD50Vr-Xoi9PBi92tZocKHAp3MF@batyr.db.elephantsql.com/ungclbar',
@@ -36,36 +40,36 @@ async function createTable() {
         if(!checkTable.rows[0].exists){
         const createTable = `CREATE TABLE players (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            position VARCHAR(50),
+            player_name VARCHAR(255) NOT NULL,
+            player_position VARCHAR(50),
             team_name VARCHAR(255),
-            player_number INTEGER,
-            at_bats INTEGER,
-            hits INTEGER,
-            doubles INTEGER,
-            triples INTEGER,
-            home_runs INTEGER,
-            runs INTEGER,
-            rbi INTEGER,
-            walks INTEGER,
-            strikeouts_batter INTEGER,
-            hbp INTEGER,
-            batting_average DECIMAL(5,3),
-            wins INTEGER,
-            losses INTEGER,
-            saves INTEGER,
-            hits_allowed INTEGER,
-            runs_allowed INTEGER,
-            earned_runs INTEGER,
-            walks_allowed INTEGER,
-            strikeouts_pitcher INTEGER,
-            hit_batters INTEGER,
-            innings DECIMAL(5,2),
-            putouts INTEGER,
-            assists INTEGER,
-            errors INTEGER,
-            stolen_bases INTEGER,
-            caught_stealing INTEGER
+            player_number INTEGER DEFAULT NULL,
+            at_bats INTEGER DEFAULT 0,
+            hits INTEGER DEFAULT 0,
+            doubles INTEGER DEFAULT 0,
+            triples INTEGER DEFAULT 0,
+            hr INTEGER DEFAULT 0,
+            runs INTEGER DEFAULT 0,
+            rbi INTEGER DEFAULT 0,
+            walks INTEGER DEFAULT 0,
+            strikeouts_batter INTEGER DEFAULT 0,
+            hbp INTEGER DEFAULT 0,
+            batting_average DECIMAL(5,3) DEFAULT 0,
+            wins INTEGER DEFAULT 0,
+            losses INTEGER DEFAULT 0,
+            saves INTEGER DEFAULT 0,
+            hits_allowed INTEGER DEFAULT 0,
+            runs_allowed INTEGER DEFAULT 0,
+            earned_runs INTEGER DEFAULT 0,
+            walks_allowed INTEGER DEFAULT 0,
+            strikeouts INTEGER DEFAULT 0,
+            hit_batters INTEGER DEFAULT 0,
+            innings DECIMAL(5,2) DEFAULT 0,
+            putouts INTEGER DEFAULT 0,
+            assists INTEGER DEFAULT 0,
+            errors INTEGER DEFAULT 0,
+            sb INTEGER DEFAULT 0,
+            cs INTEGER DEFAULT 0
         );
         `;
         await client.query(createTable);
@@ -79,12 +83,8 @@ async function createTable() {
     }
 }
 
-//createTable();
+//createTable
 createTable();
-
-// Import routes
-const playerRoutes = require('./routes/players');
-app.use('/api/players', playerRoutes);
 
 // Start server
 app.listen(port, () => {

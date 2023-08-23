@@ -1,13 +1,13 @@
 /*-----DOM ELEMENTS-----*/
 //basic player info
 const playerFormElement = document.getElementById('player-form');
-const playerNameElement = document.getElementById('player-name');
-const playerPositionElement = document.getElementById('player-position');
-const playerTeamElement = document.getElementById('team-name');
-const playerNumberElement = document.getElementById('player-number');
+const playerNameElement = document.getElementById('player_name');
+const playerPositionElement = document.getElementById('player_position');
+const playerTeamElement = document.getElementById('team_name');
+const playerNumberElement = document.getElementById('player_number');
 //hitting stats
 const hittingStatsSectionElement = document.getElementById('hitting-stats');
-const atBatsElement = document.getElementById('at-bats');
+const atBatsElement = document.getElementById('at_bats');
 const hitsElement = document.getElementById('hits');
 const doublesElement = document.getElementById('doubles');
 const triplesElement = document.getElementById('triples');
@@ -15,20 +15,20 @@ const homeRunsElement = document.getElementById('hr');
 const runsElement = document.getElementById('runs');
 const rbiElement = document.getElementById('rbi');
 const walksElement = document.getElementById('walks');
-const strikeoutsElement = document.getElementById('strikeouts-batter');
+const strikeoutsElement = document.getElementById('strikeouts_batter');
 const hitByPitchElement = document.getElementById('hbp');
-const battingAverageElement = document.getElementById('batting-average');
+const battingAverageElement = document.getElementById('batting_average');
 //pitching stats
 const pitchingStatsSectionElement = document.getElementById('pitching-stats');
 const winsElement = document.getElementById('wins');
 const lossesElement = document.getElementById('losses');
 const savesElement = document.getElementById('saves');
-const hitsAllowedElement = document.getElementById('hits-allowed');
-const runsAllowedElement = document.getElementById('runs-allowed');
-const earnedRunsElement = document.getElementById('earned-runs');
-const walksAllowedElement = document.getElementById('walks-allowed');
+const hitsAllowedElement = document.getElementById('hits_allowed');
+const runsAllowedElement = document.getElementById('runs_allowed');
+const earnedRunsElement = document.getElementById('earned_runs');
+const walksAllowedElement = document.getElementById('walks_allowed');
 const strikeoutsPitcherElement = document.getElementById('strikeouts');
-const hitBattersElement = document.getElementById('hit-batters');
+const hitBattersElement = document.getElementById('hit_batters');
 const inningsPitchedElement = document.getElementById('innings');
 //fielding stats
 const fieldingStatsSectionElement = document.getElementById('fielding-stats');
@@ -43,6 +43,8 @@ const caughtStealingElement = document.getElementById('cs');
 const submitButtonElement = document.getElementById('submit');
 const feedbackElement = document.getElementById('feedback');
 const playerStatsDisplayElement = document.getElementById('player-stats-display');
+const playerProfileElement = document.getElementById('player-profile-display');
+const playerIdElement = document.getElementById('id');
 
 
 
@@ -61,32 +63,13 @@ function calcBattingAverage(){
     battingAverageElement.value = battingAverage;
 }
 
-//function to display statistics
-function displayStats(data) {
-    playerStatsDisplayElement.innerHTML = '';
-
-    //title
-    const title = document.createElement('h2');
-    title.textContent = `${data['player-name']}'s Statistics`;
-    playerStatsDisplayElement.appendChild(title);
-
-    //display each stat
-    for(let key in data) {
-        if(data[key]){
-            const stat = document.createElement('div');
-            stat.className = 'stat-item';
-            stat.textContent = `${key.replace('-', ' ').toUpperCase()}: ${data[key]}`;
-            playerStatsDisplayElement.appendChild(stat);
-        }
-    }
-}
 
 //function to collect player data
 function gatherFormData(onlyFilledFields = false){
     const playerData = {};
     const inputs = document.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
-        if(!onlyFilledFields || (onlyFilledFields && input.value.trim !== '')){
+        if(input.id !== 'id' && !onlyFilledFields || (onlyFilledFields && input.value.trim() !== '')){
             playerData[input.id] = input.value;
         }
     });
@@ -97,28 +80,91 @@ function gatherFormData(onlyFilledFields = false){
 function displayLeaderboard(players) {
     playerStatsDisplayElement.innerHTML = '';
 
-    players.forEach(player => {
-        const playerEntry = document.createElement('div');
-        playerEntry.className = 'player-entry';
+    //stats to be displayed
+    const statsToDisplay = ['player_name', 'team_name', 'player_position', 'at_bats', 'hits', 'batting_average', 'hr', 'wins', 'losses', 'saves', 'innings', 'strikeouts', 'sb', 'cs'];
 
-        //display
-        let playerInfo = `<strong>${player['player-name']}</strong> - ${player['team-name']} - ${player['player-position']}<br>`;
-        for(let key in player) {
-            if(player[key] && key !== 'player-name' && key !== 'team-name' && key !== 'player-position' && key !== 'id'){
-                playerInfo += `${key.replace('-', ' ').toUpperCase()}: ${player[key]}<br>`;
-            }
-        }
+    const table = document.createElement('table');
+    const tableHead = document.createElement('thead');
+    const tableBody = document.createElement('tbody');
 
-        //edit and delete buttons
-        const editButton = `<button class="edit-button" data-id="${player.id}">Edit</button>`;
-        const deleteButton = `<button class="delete-button" data-id="${player.id}">Delete</button>`;
-
-        playerEntry.innerHTML = playerInfo + editButton + deleteButton;
-        playerStatsDisplayElement.appendChild(playerEntry);
+    //create table header
+    const headerRow = document.createElement('tr');
+    statsToDisplay.forEach(stat => {
+        const headerCell = document.createElement('th');
+        headerCell.textContent = stat.replace('_', ' ').toUpperCase();
+        headerRow.appendChild(headerCell);
     });
+    headerRow.appendChild(document.createElement('th')); //edit button
+    headerRow.appendChild(document.createElement('th')); //delete button
+    tableHead.appendChild(headerRow);
+    table.appendChild(tableHead);
+
+    //create table body 
+    players.forEach(player => {
+        console.log(player);
+        const playerRow = document.createElement('tr');
+        statsToDisplay.forEach(stat => {
+            const playerCell = document.createElement('td');
+
+            if(stat === 'player_name') {
+                const playerLink = document.createElement('a');
+                playerLink.href = '#';
+                playerLink.innerHTML = `<strong>${player['player_name']}</strong>`;
+                playerLink.addEventListener('click', () => displayPlayerProfile(player));
+                playerCell.appendChild(playerLink);
+            } else {
+                playerCell.textContent = player[stat];
+            }
+            playerRow.appendChild(playerCell);
+        });
+
+        //edit button
+        const editTd = document.createElement('td');
+        const editButton = document.createElement('button');
+        editButton.className = 'edit-button';
+        editButton.dataset.id = player.id;
+        editButton.textContent = 'Edit';
+        editTd.appendChild(editButton);
+
+        //delete button
+        const deleteTd = document.createElement('td');
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.dataset.id = player.id;
+        deleteButton.textContent = 'Delete';
+        deleteTd.appendChild(deleteButton);
+
+        playerRow.appendChild(editTd);
+        playerRow.appendChild(deleteTd);
+        tableBody.appendChild(playerRow);
+    });
+    table.appendChild(tableBody);
+
+    playerStatsDisplayElement.appendChild(table);
+
 }
 
-//edit and delete functions
+//display player profile
+function displayPlayerProfile(player) {
+    playerProfileElement.innerHTML = '';
+
+    for(let key in player) {
+        const stat = document.createElement('div');
+        stat.id = 'stat-item';
+        if(player[key]){
+            stat.innerHTML = `${key.replace('_', ' ').toUpperCase()}: ${player[key]}`;
+            playerProfileElement.appendChild(stat);
+        }
+    }
+}
+
+//reset form
+function resetForm() {
+    playerFormElement.reset();
+    playerIdElement.value = '';
+}
+
+//edit function
 function editFunction(e) {
     const playerId = e.target.getAttribute('data-id');
     //fetch player data, then populate form
@@ -141,6 +187,8 @@ function editFunction(e) {
         });
     })
     .catch(error => console.error('Error fetching player for edit: ', error));
+
+    playerIdElement.value = playerId;
 }
 
 /*-----CRUD OPERATIONS-----*/
@@ -236,8 +284,18 @@ playerPositionElement.addEventListener('change', function() {
 //submit player form
 playerFormElement.addEventListener('submit', function(e) {
     e.preventDefault();
-    //create player
-    createPlayer();
+
+    //check if player is being created or updated
+    const playerId = playerIdElement.value;
+    if(playerId) {
+        updatePlayer(playerId);
+    } else {
+        createPlayer();
+    }
+
+    //reset player id
+    playerIdElement.value = '';
+
     //clear form
     playerFormElement.reset();
 });
