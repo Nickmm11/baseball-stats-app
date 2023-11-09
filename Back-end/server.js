@@ -1,4 +1,5 @@
 // Initialize express
+const path = require('path');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -6,7 +7,7 @@ const port = process.env.PORT || 3000;
 // Initialize pg promise
 const { Pool } = require('pg');
 
-app.use(express.static('Front-end'));
+app.use(express.static(path.join(__dirname, '..', 'Front-end')));
 // Initialize cors
 app.use(cors());
 // Initialize body-parser
