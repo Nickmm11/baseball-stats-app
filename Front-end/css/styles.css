@@ -1,139 +1,384 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding: 0;
+:root {
+    --primary: #0e3b7e;
+    --secondary: #e21c3d;
+    --accent: #ffc72c;
+    --light: #f4f7ff;
+    --dark: #1a2a40;
+    --success: #2ecc71;
+    --error: #e74c3c;
+    --neutral: #ecf0f1;
+    --border-radius: 8px;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
-header, main, footer{
-    max-width: 1200px;
-    margin: 0 auto;
+body{
+    font-family: 'Roboto', 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary), #1a5cb0);
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://img.freepik.com/free-vector/baseball-field-background-flat-design_23-2147639675.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15;
+    z-index: 0;
+}
+
+header h1 {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: 2.5rem; 
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+main{
+    max-width: 1300px;
+    margin: 20px auto;
     padding: 20px;
 }
 
-header{
-    background-color: #333;
-    color: #fff;
+footer {
+    background-color: var(--primary);
+    color: white;
     text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+    margin-top: 40px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1)
 }
 
-footer{
-    background-color: #eee;
-    text-align: center;
-}
-
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 0;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-th:hover {
-    background-color: #f5f5f5;
-}
-
-a {
-    color: blue;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-.section{
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-
-.section h2{
-    font-size: 1.2em;
-    margin-bottom: 10px;
-}
-
-.section input{
-    margin-bottom: 10px;
-    padding: 5px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.success{
-    color: green;
-}
-
-.error{
-    color: red;
-}
-
-.app-container{
+/* App Container */
+.app-container {
     display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
     justify-content: space-between;
-    gap: 20px;
 }
 
-.form-section{
+/* Layout */
+@media (max-width: 1100px) {
+    .app-container {
+        flex-direction: column;
+    }
+    .form-section {
+        max-width: 100% !important;
+    }
+}
+
+/* Form Styling */
+.form-section {
     flex: 1;
-    max-width: 48%
+    min-width: 350px;
+    max-width: 48%;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 25px;
 }
 
 .right-section {
     flex: 1;
+    min-width: 350px;
     max-width: 48%;
     display: flex;
     flex-direction: column;
+    gap: 30px;
 }
 
-.stats-section, .player-profile-section{
+.section {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 25px;
+    border-left: 5px solid var(--primary);
+}
+
+.section h2 {
+    color: var(--primary);
+    font-size: 1.3rem;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.section h2::before{
+    content: "⚾";
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+#pitching-stats h2::before {
+    content: "🎯"; 
+}
+
+#fielding-stats h2::before {
+    content: "🧤"; 
+}
+
+#baserunning-stats h2::before {
+    content: "👟"; 
+}
+
+/* Input Styling*/ 
+input, select {
     width: 100%;
-}
-
-.stats-section{
-    overflow-x: auto;
-    max-height: 400px;
-    overflow-y: auto;
+    padding: 12px;
+    margin-bottom: 15px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
 }
 
-.player-profile-section{
-    margin-top: 20px;
+impact focus, select:focus {
+    outline: None;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(14, 59, 126, 0.2.);
 }
 
-.edit-button, .delete-button {
-    background-color: #f2f2f2;
-    padding: 6px 12px;
+input[readonly] {
+    background-color: #f9f9f9;
+    cursor: not-allowed;
+}
+
+/* Button Styling */
+button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12 px 25px;
+    border-radius: var(--border-radius);
     cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-block;
+}
+
+button:hover {
+    background-color: #1a5cb0;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#submit {
+    width: 100%;
+    margin-top: 10px;
+    background-color: var(--secondary);
+}
+
+#submit:hover { 
+    background-color: #c01c36;
+}
+
+/* Stats Section*/
+.stats-section, .player-profile-section { 
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(-shadow);
+    padding: 25px;
+    height: 100%;
+}
+
+.stats-section h2, .player-profile-section h2 {
+    color: var(--primary);
+    font-size: 1.3rem;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+}
+
+.stats-section {
+    max-height: 500px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--neutral);
+}
+
+/* Custom Scrollbar */
+.stats-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.stats-section::-webkit-scrollbar-track {
+    background: var(--neutral);
+}
+
+.stats-section::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 20px;
+}
+
+/* table Styling*/
+table { 
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+table, th, td {
     border: none;
 }
 
-.edit-button:hover, .delete-button:hover {
-    background-color: #ddd;
+tr {
+    border-bottom: 1px solid #eee;
 }
 
-#player-stats-display{
-    border: 1px solid #ddd; 
-    padding: 20px;
-    margin-top: 20px
+th {
+    background-color: var(--primary);
+    color: white;
+    padding: 12px 8px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-#stat-item{
+th:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+th:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+td { 
+    padding: 12px 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #f7f9fc;
+}
+
+tr:hover {
+    background-color: #eef2f7;
+}
+
+/* Edit and Delete Buttoms*/
+.edit-button, .delete-button {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    margin: 0 3px;
+}
+
+.edit-button {
+    background-color: #3498db;
+}
+
+.edit-button:hover {
+    background-color: #2980b9;
+}
+
+.delete-button {
+    background-color: #e74c3c;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+}
+
+/* player profile display*/
+#player-profile-display {
+    padding: 15px;
+    border-radius: var(--border-radius);
+    background-color: #f7f9fc;
+}
+
+#stat-item {
     margin-bottom: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
 }
 
-#pitching-stats{
-    display: none;
+#stat-item:last-child {
+    border-bottom: none;
+}
+
+/* Feedback Messages*/
+#feedback {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    font-weight: bold;
+}
+
+.success { 
+    background-color: rgba(46, 204, 113, 0.2);
+    color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+.error { 
+    background-color: rgba(231, 76, 60, 0.2);
+    color: #c0392b;
+    border: 1px solid #c0392b;
+}
+
+/* Player Name Links */
+a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--secondary);
+    text-decoration: none;
+}
+
+/* Responseive Touches*/
+@media (max-width: 768px) {
+    .section h2 {
+        font-size: 1.1rem;
+    }
+
+    input, select, button {
+        padding: 10px;
+    }
+
+    .stats-section {
+        max-height: 400px
+    }
+
+    table {
+        font-size: 0.8rem;
+    }
 }
