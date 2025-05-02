@@ -1,3 +1,4 @@
+require('dotenv').config();
 // Initialize express
 const path = require('path');
 const express = require('express');
@@ -20,7 +21,7 @@ app.use('/api/players', playerRoutes);
 
 //connect to database
 const pool = new Pool({
-    connectionString: 'postgres://ungclbar:Yp6AMSD50Vr-Xoi9PBi92tZocKHAp3MF@batyr.db.elephantsql.com/ungclbar',
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }

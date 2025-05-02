@@ -8,7 +8,7 @@ const router = express.Router();
 
 //connect to database
 const pool = new Pool({
-    connectionString: 'postgres://ungclbar:Yp6AMSD50Vr-Xoi9PBi92tZocKHAp3MF@batyr.db.elephantsql.com/ungclbar',
+    connectionString: 'postgresql://postgres:#mB+C?wY6jcnwWF@db.pdighslhiinbtpojjuiy.supabase.co:5432/postgres',
     ssl: {
         rejectUnauthorized: false
     }
