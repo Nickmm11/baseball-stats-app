@@ -1,17 +1,18 @@
+
+
 /*
     This file is used to handle the routes for the players
  */
 // Import express
+require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
 const router = express.Router();
 
 //connect to database
 const pool = new Pool({
-    connectionString: 'postgresql://postgres:#mB+C?wY6jcnwWF@db.pdighslhiinbtpojjuiy.supabase.co:5432/postgres',
-    ssl: {
-        rejectUnauthorized: false
-    }
+    connectionString: process.env.DATABASE_URL,
+    ssl: false
 });
 
 

@@ -22,9 +22,7 @@ app.use('/api/players', playerRoutes);
 //connect to database
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
+    ssl: false
 });
 
 //create table for stats
