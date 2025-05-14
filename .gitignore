@@ -17,3 +17,5 @@ logs/
 # Build outputs (if any)
 Back-end/build/
 Front-end/build/
+
+echo ".env*" >> .gitignore
