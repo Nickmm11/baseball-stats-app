@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# OS files
+.DS_Store
+
+# Environment files
+.env
+.env.*      # ignores .env.production, .env.development, etc.
+
+# Build outputs (if any)
+Back-end/build/
+Front-end/build/
