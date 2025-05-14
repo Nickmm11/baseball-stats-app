@@ -197,7 +197,7 @@ function createPlayer() {
     const playerData = gatherFormData();
 
     //fetch player data
-    fetch('http://localhost:3000/api/players', {
+    fetch('api/players', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -214,7 +214,7 @@ function createPlayer() {
 
 //READ - GET
 function fetchPlayerData() {
-    fetch('http://localhost:3000/api/players')
+    fetch('api/players')
     .then(response => response.json())
     .then(players => displayLeaderboard(players))
     .catch(error => console.error('Error: ', error));
@@ -225,7 +225,7 @@ function updatePlayer(playerId) {
     const updatedPlayerData = gatherFormData(true);
 
     //fetch player data
-    fetch(`http://localhost:3000/api/players/${playerId}`, {
+    fetch(`api/players/${playerId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -244,7 +244,7 @@ function updatePlayer(playerId) {
 function deletePlayer(e) {
     const playerId = e.target.getAttribute('data-id');
     //delete player, then fetch and display updated leaderboard
-    fetch(`http://localhost:3000/api/players/${playerId}`, {
+    fetch(`api/players/${playerId}`, {
         method: 'DELETE'
     })
     .then(response => {
